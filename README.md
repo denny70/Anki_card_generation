@@ -4,6 +4,7 @@ Generate Anki flashcard packages (`.apkg`) with embedded TTS audio from a simple
 Just put your words in — the tool auto-fills meanings, example sentences, and opposites from the internet, then bakes audio directly into the package so no internet is needed when reviewing.
 
 **Current version: v2.2.6**
+Hope someone can help to make Anki card better for language learning
 
 ---
 
