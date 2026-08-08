@@ -7,6 +7,71 @@ Just put your words in — the tool auto-fills meanings, example sentences, and 
 
 ---
 
+## How It Works — Big Picture
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                        YOUR INPUT (Excel)                           │
+│                                                                     │
+│   front_card   │ meaning │ sentence │ opposite │  ...              │
+│   ─────────────┼─────────┼──────────┼──────────┼────               │
+│   xin chào     │         │          │          │  ← only word      │
+│   nóng         │  hot    │          │  lạnh    │  ← partial data   │
+│   đẹp          │         │          │          │  ← only word      │
+└───────────────────────────┬─────────────────────────────────────────┘
+                            │
+                            ▼  Auto-fill empty fields from internet
+              ┌─────────────────────────────┐
+              │       DATA SOURCES          │
+              │  🌐 Google Translate        │  → meanings
+              │  🌐 Tatoeba                 │  → example sentences
+              │  🌐 Free Dictionary API     │  → antonyms
+              └─────────────┬───────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                    GENERATED DATA (Excel _gen)                      │
+│                                                                     │
+│   front_card │ meaning │    sentence     │ sentence_en │ opposite   │
+│   ───────────┼─────────┼─────────────────┼─────────────┼─────────  │
+│   xin chào   │  hello  │ Xin chào bạn!   │ Hello!      │  N/A      │
+│   nóng       │  hot    │ Hôm nay trời... │ Today it... │  lạnh     │
+│   đẹp        │beautiful│ Cô ấy rất đẹp   │ She is very │  xấu      │
+└───────────────────────────┬─────────────────────────────────────────┘
+                            │
+                            ▼  TTS audio generated per word/sentence
+              ┌─────────────────────────────┐
+              │       AUDIO (gTTS)          │
+              │  🔊 front word audio        │
+              │  🔊 example sentence audio  │
+              │  🔊 opposite word audio     │
+              └─────────────┬───────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                    ANKI PACKAGE (.apkg)                             │
+│                                                                     │
+│  ┌──────────────────┐   ┌──────────────────┐   ┌────────────────┐  │
+│  │  Recognition     │   │  Recall          │   │  Reverse       │  │
+│  │  ─────────────── │   │  ─────────────── │   │  ───────────── │  │
+│  │  FRONT:          │   │  FRONT:          │   │  FRONT:        │  │
+│  │  Word + 🔊       │   │  Meaning + 🔊    │   │  Opposite + 🔊 │  │
+│  │                  │   │                  │   │                │  │
+│  │  BACK:           │   │  BACK:           │   │  BACK:         │  │
+│  │  Meaning         │   │  Word            │   │  Meaning       │  │
+│  │  Sentence + 🔊   │   │  Sentence + 🔊   │   │  Sentence + 🔊 │  │
+│  │  Opposite + 🔊   │   │  Opposite + 🔊   │   │  Word + 🔊     │  │
+│  └──────────────────┘   └──────────────────┘   └────────────────┘  │
+│                                                                     │
+│              Audio is EMBEDDED — no internet needed to review       │
+└─────────────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+                   Import into Anki → Start reviewing!
+```
+
+---
+
 ## Quick Start
 
 ### Option 1: Standalone App (Windows, no Python needed)
