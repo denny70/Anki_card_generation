@@ -9,65 +9,32 @@ Just put your words in — the tool auto-fills meanings, example sentences, and 
 
 ## How It Works — Big Picture
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                        YOUR INPUT (Excel)                           │
-│                                                                     │
-│   front_card   │ meaning │ sentence │ opposite │  ...              │
-│   ─────────────┼─────────┼──────────┼──────────┼────               │
-│   xin chào     │         │          │          │  ← only word      │
-│   nóng         │  hot    │          │  lạnh    │  ← partial data   │
-│   đẹp          │         │          │          │  ← only word      │
-└───────────────────────────┬─────────────────────────────────────────┘
-                            │
-                            ▼  Auto-fill empty fields from internet
-              ┌─────────────────────────────┐
-              │       DATA SOURCES          │
-              │  🌐 Google Translate        │  → meanings
-              │  🌐 Tatoeba                 │  → example sentences
-              │  🌐 Free Dictionary API     │  → antonyms
-              └─────────────┬───────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                    GENERATED DATA (Excel _gen)                      │
-│                                                                     │
-│   front_card │ meaning │    sentence     │ sentence_en │ opposite   │
-│   ───────────┼─────────┼─────────────────┼─────────────┼─────────  │
-│   xin chào   │  hello  │ Xin chào bạn!   │ Hello!      │  N/A      │
-│   nóng       │  hot    │ Hôm nay trời... │ Today it... │  lạnh     │
-│   đẹp        │beautiful│ Cô ấy rất đẹp   │ She is very │  xấu      │
-└───────────────────────────┬─────────────────────────────────────────┘
-                            │
-                            ▼  TTS audio generated per word/sentence
-              ┌─────────────────────────────┐
-              │       AUDIO (gTTS)          │
-              │  🔊 front word audio        │
-              │  🔊 example sentence audio  │
-              │  🔊 opposite word audio     │
-              └─────────────┬───────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                    ANKI PACKAGE (.apkg)                             │
-│                                                                     │
-│  ┌──────────────────┐   ┌──────────────────┐   ┌────────────────┐  │
-│  │  Recognition     │   │  Recall          │   │  Reverse       │  │
-│  │  ─────────────── │   │  ─────────────── │   │  ───────────── │  │
-│  │  FRONT:          │   │  FRONT:          │   │  FRONT:        │  │
-│  │  Word + 🔊       │   │  Meaning + 🔊    │   │  Opposite + 🔊 │  │
-│  │                  │   │                  │   │                │  │
-│  │  BACK:           │   │  BACK:           │   │  BACK:         │  │
-│  │  Meaning         │   │  Word            │   │  Meaning       │  │
-│  │  Sentence + 🔊   │   │  Sentence + 🔊   │   │  Sentence + 🔊 │  │
-│  │  Opposite + 🔊   │   │  Opposite + 🔊   │   │  Word + 🔊     │  │
-│  └──────────────────┘   └──────────────────┘   └────────────────┘  │
-│                                                                     │
-│              Audio is EMBEDDED — no internet needed to review       │
-└─────────────────────────────────────────────────────────────────────┘
-                            │
-                            ▼
-                   Import into Anki → Start reviewing!
+```mermaid
+flowchart TD
+    A[("📄 Your Excel file\n──────────────────\nfront_card  ← required\nmeaning     ← optional\nsentence    ← optional\nopposite    ← optional")]
+
+    A --> B["🌐 Auto-fill from internet\n──────────────────────────\nGoogle Translate → meanings\nTatoeba → example sentences\nFree Dictionary API → antonyms\n\nOnly fetches what is empty.\nExisting data is never overwritten."]
+
+    B --> C[("📊 Generated Excel  _gen.xlsx\n──────────────────────────────\nAll fields filled or marked N/A\nReview before generating cards")]
+
+    C --> D["🔊 TTS Audio  via gTTS\n────────────────────────\nFront word audio\nExample sentence audio\nOpposite word audio"]
+
+    D --> E[("📦 Anki Package  .apkg\n─────────────────────────\nAudio embedded inside\nNo internet needed to review")]
+
+    E --> F["🃏 3 Card Types per Word"]
+
+    F --> G["Recognition\n─────────────\nFront: Word 🔊\nBack:  Meaning\n       Sentence 🔊\n       Opposite 🔊"]
+    F --> H["Recall\n─────────────\nFront: Meaning 🔊\nBack:  Word\n       Sentence 🔊\n       Opposite 🔊"]
+    F --> I["Reverse\n─────────────\nFront: Opposite 🔊\nBack:  Meaning\n       Sentence 🔊\n       Word 🔊"]
+
+    G --> J[("✅ Import .apkg into Anki\nReview history preserved\non re-import")]
+    H --> J
+    I --> J
+
+    style A fill:#e8f5e9,stroke:#4caf50
+    style C fill:#e3f2fd,stroke:#2196f3
+    style E fill:#fff3e0,stroke:#ff9800
+    style J fill:#f3e5f5,stroke:#9c27b0
 ```
 
 ---
