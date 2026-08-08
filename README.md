@@ -9,32 +9,63 @@ Just put your words in — the tool auto-fills meanings, example sentences, and 
 
 ## How It Works — Big Picture
 
-```mermaid
-flowchart TD
-    A[("📄 Your Excel file\n──────────────────\nfront_card  ← required\nmeaning     ← optional\nsentence    ← optional\nopposite    ← optional")]
-
-    A --> B["🌐 Auto-fill from internet\n──────────────────────────\nGoogle Translate → meanings\nTatoeba → example sentences\nFree Dictionary API → antonyms\n\nOnly fetches what is empty.\nExisting data is never overwritten."]
-
-    B --> C[("📊 Generated Excel  _gen.xlsx\n──────────────────────────────\nAll fields filled or marked N/A\nReview before generating cards")]
-
-    C --> D["🔊 TTS Audio  via gTTS\n────────────────────────\nFront word audio\nExample sentence audio\nOpposite word audio"]
-
-    D --> E[("📦 Anki Package  .apkg\n─────────────────────────\nAudio embedded inside\nNo internet needed to review")]
-
-    E --> F["🃏 3 Card Types per Word"]
-
-    F --> G["Recognition\n─────────────\nFront: Word 🔊\nBack:  Meaning\n       Sentence 🔊\n       Opposite 🔊"]
-    F --> H["Recall\n─────────────\nFront: Meaning 🔊\nBack:  Word\n       Sentence 🔊\n       Opposite 🔊"]
-    F --> I["Reverse\n─────────────\nFront: Opposite 🔊\nBack:  Meaning\n       Sentence 🔊\n       Word 🔊"]
-
-    G --> J[("✅ Import .apkg into Anki\nReview history preserved\non re-import")]
-    H --> J
-    I --> J
-
-    style A fill:#e8f5e9,stroke:#4caf50
-    style C fill:#e3f2fd,stroke:#2196f3
-    style E fill:#fff3e0,stroke:#ff9800
-    style J fill:#f3e5f5,stroke:#9c27b0
+```
+  Your Excel file
+  ┌──────────────────────────────────────────┐
+  │  front_card  │ meaning │ sentence │ ...  │
+  │  ────────────┼─────────┼──────────┼───── │
+  │  xin chào   │         │          │      │  <- only word needed
+  │  nong        │  hot    │          │ lanh │  <- partial is fine
+  │  dep         │         │          │      │  <- only word needed
+  └───────────────────────┬──────────────────┘
+                          │
+                          v  empty fields auto-filled from internet
+              ┌───────────────────────┐
+              │  Google Translate     │  -> meanings
+              │  Tatoeba              │  -> example sentences
+              │  Free Dictionary API  │  -> antonyms
+              │                       │
+              │  Already filled?      │
+              │    -> kept as-is      │
+              │  Not found online?    │
+              │    -> marked N/A      │
+              └───────────┬───────────┘
+                          │
+                          v
+  Generated file  (*_gen.xlsx)
+  ┌──────────────────────────────────────────────────────┐
+  │  front_card │ meaning  │ sentence          │opposite │
+  │  ───────────┼──────────┼───────────────────┼──────── │
+  │  xin chao   │  hello   │ Xin chao ban!     │  N/A    │
+  │  nong        │  hot     │ Hom nay troi nong.│  lanh   │
+  │  dep         │ beautiful│ Co ay rat dep.    │  xau    │
+  └───────────────────────┬──────────────────────────────┘
+                          │
+                          v  TTS audio generated (gTTS)
+              ┌───────────────────────┐
+              │  word audio           │
+              │  sentence audio       │
+              │  opposite audio       │
+              └───────────┬───────────┘
+                          │
+                          v
+  Anki package  (.apkg)  — audio embedded, no internet needed to review
+  ┌─────────────────────┬─────────────────────┬─────────────────────┐
+  │   Recognition       │   Recall            │   Reverse           │
+  │   ─────────────     │   ─────────────     │   ─────────────     │
+  │   FRONT:            │   FRONT:            │   FRONT:            │
+  │     Word + audio    │     Meaning + audio │     Opposite + audio│
+  │                     │                     │                     │
+  │   BACK:             │   BACK:             │   BACK:             │
+  │     Meaning         │     Word            │     Meaning         │
+  │     Sentence+audio  │     Sentence+audio  │     Sentence+audio  │
+  │     Opposite+audio  │     Opposite+audio  │     Word + audio    │
+  └─────────────────────┴─────────────────────┴─────────────────────┘
+                          │
+                          v
+             Import .apkg into Anki
+             Same word = same note ID -> review history preserved
+             Add new words anytime -> only new cards added
 ```
 
 ---
