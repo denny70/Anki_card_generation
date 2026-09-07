@@ -1,18 +1,20 @@
 """
-Build script for creating AnkiCardGenerator macOS .app bundle.
-Run: python build_mac.py
-Output: dist/AnkiCardGenerator_v{version}_mac.app  (double-click to run)
-        dist/AnkiCardGenerator_v{version}_mac       (standalone CLI binary)
+Build script for creating AnkiCardGenerator Linux (Ubuntu) binary.
+Run: python build_linux.py
+Output: dist/AnkiCardGenerator_v{version}_linux   (standalone executable, no extension)
 
 Requirements:
     pip install pyinstaller tkinterdnd2 pykakasi
 
+System packages (Ubuntu) needed for the Tkinter GUI + drag-and-drop:
+    sudo apt-get install python3-tk tk-dev
+
 Notes:
-    - This creates a macOS .app bundle (--windowed) suitable for double-clicking.
-    - The original build_exe.py is configured for Windows; this file is for macOS.
-    - On Apple Silicon (M1/M2/M3), the binary is built for the current architecture.
-    - To create a universal binary, install dependencies for both archs and use
-      --target-architecture universal2 (requires both arm64 and x86_64 Python).
+    - This builds a single-file executable for the current Linux architecture
+      (e.g. x86_64). Build on the same architecture you intend to distribute to.
+    - Linux uses ':' as the PyInstaller --add-data separator.
+    - Run the result with:  ./dist/AnkiCardGenerator_v{version}_linux
+      (you may need: chmod +x dist/AnkiCardGenerator_v{version}_linux)
 """
 import PyInstaller.__main__
 import tkinterdnd2
@@ -26,15 +28,15 @@ from gen_anki import __version__
 tkdnd_path = os.path.dirname(tkinterdnd2.__file__)
 pykakasi_path = os.path.dirname(pykakasi.__file__)
 
-app_name = f'AnkiCardGenerator_v{__version__}_mac'
+app_name = f'AnkiCardGenerator_v{__version__}_linux'
 
-# macOS uses ':' as the data separator
+# Linux uses ':' as the data separator
 sep = ':'
 
 pyinstaller_args = [
     'gen_anki_gui.py',
     '--onefile',
-    '--windowed',                    # Creates .app bundle on macOS
+    '--windowed',                    # GUI app, no console window
     f'--name={app_name}',
     f'--add-data={tkdnd_path}{sep}tkinterdnd2',
     f'--add-data={pykakasi_path}{sep}pykakasi',
@@ -44,7 +46,7 @@ pyinstaller_args = [
     '--hidden-import=deep_translator',
     '--hidden-import=openpyxl',
     '--hidden-import=requests',
-    '--hidden-import=beautifulsoup4',
+    '--hidden-import=bs4',
     '--hidden-import=pykakasi',
     '--hidden-import=imageio',
     '--hidden-import=imageio_ffmpeg',
@@ -65,12 +67,12 @@ pyinstaller_args = [
     '--clean',                       # Clean PyInstaller cache before building
 ]
 
-# Optional: add an icon if one exists
-icon_path = os.path.join(os.path.dirname(__file__), 'icon.icns')
+# Optional: add an icon if one exists (PNG works for Linux)
+icon_path = os.path.join(os.path.dirname(__file__), 'icon.png')
 if os.path.exists(icon_path):
     pyinstaller_args.append(f'--icon={icon_path}')
 
-print(f"Building {app_name} for macOS...")
+print(f"Building {app_name} for Linux...")
 print(f"  tkinterdnd2: {tkdnd_path}")
 print(f"  pykakasi:    {pykakasi_path}")
 print()
@@ -79,7 +81,7 @@ PyInstaller.__main__.run(pyinstaller_args)
 
 print()
 print("=" * 60)
-print(f"Build complete!")
-print(f"  App bundle: dist/{app_name}.app")
-print(f"  Binary:     dist/{app_name}")
+print("Build complete!")
+print(f"  Binary: dist/{app_name}")
+print(f"  Run it: chmod +x dist/{app_name} && ./dist/{app_name}")
 print("=" * 60)

@@ -52,9 +52,18 @@ PyInstaller.__main__.run([
     '--hidden-import=pykakasi',
     '--hidden-import=imageio',
     '--hidden-import=imageio_ffmpeg',
+    # Optional TTS / video features (bundled so they work out of the box)
+    '--hidden-import=edge_tts',
+    '--hidden-import=pyttsx3',
+    '--hidden-import=moviepy',
+    '--hidden-import=PIL',
     '--collect-all=tkinterdnd2',
     '--collect-all=pykakasi',
     '--collect-all=imageio',
     '--collect-all=imageio_ffmpeg',
+    '--collect-all=edge_tts',
+    '--collect-all=pyttsx3',
+    '--collect-all=moviepy',
+    '--collect-all=PIL',
     '--noconfirm',
 ])

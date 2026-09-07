@@ -250,8 +250,13 @@ class AnkiGeneratorGUI:
         self.csv_btn = ttk.Button(btn_frame, text="Generate Data Only", command=self._generate_data_only)
         self.csv_btn.pack(side=tk.LEFT, padx=5)
 
-        self.install_btn = ttk.Button(btn_frame, text="Install Packages", command=self._install_packages)
-        self.install_btn.pack(side=tk.LEFT, padx=5)
+        # Only show "Install Packages" when running from source (python gen_anki_gui.py).
+        # In a bundled/frozen binary, sys.executable is the app itself, so a pip
+        # subprocess would just relaunch the app in a new window. All deps are
+        # already baked into the binary, so the button is hidden there.
+        if not getattr(sys, 'frozen', False):
+            self.install_btn = ttk.Button(btn_frame, text="Install Packages", command=self._install_packages)
+            self.install_btn.pack(side=tk.LEFT, padx=5)
 
         # --- Log ---
         log_frame = tk.LabelFrame(self.tab_anki, text="Log", padx=5, pady=5)
@@ -329,7 +334,9 @@ class AnkiGeneratorGUI:
         ttk.Button(btn_frame, text="Generate Audio", command=self._generate_tts).pack(side=tk.LEFT, padx=5)
         ttk.Button(btn_frame, text="Generate Video", command=self._generate_video).pack(side=tk.LEFT, padx=5)
         ttk.Button(btn_frame, text="Clear", command=lambda: self.tts_text.delete('1.0', tk.END)).pack(side=tk.LEFT, padx=5)
-        ttk.Button(btn_frame, text="Install Packages", command=self._install_tts_packages).pack(side=tk.LEFT, padx=5)
+        # Hidden in bundled binary (deps already included); see note in main tab.
+        if not getattr(sys, 'frozen', False):
+            ttk.Button(btn_frame, text="Install Packages", command=self._install_tts_packages).pack(side=tk.LEFT, padx=5)
 
         # Note about video engine
         note_frame = tk.Frame(self.tab_tts)
@@ -355,6 +362,10 @@ class AnkiGeneratorGUI:
 
     def _install_tts_packages(self):
         """Install TTS-specific packages."""
+        if getattr(sys, 'frozen', False):
+            self.tts_log.insert(tk.END, "Running as a bundled app - TTS packages are already included.\n")
+            self.tts_log.see(tk.END)
+            return
         self.tts_log.insert(tk.END, "Installing TTS packages...\n")
         self.tts_log.see(tk.END)
         thread = threading.Thread(target=self._do_install_tts, daemon=True)
@@ -757,6 +768,11 @@ class AnkiGeneratorGUI:
 
     def _install_packages(self):
         """Install required Python packages."""
+        if getattr(sys, 'frozen', False):
+            # Bundled binary: sys.executable is the app, not Python. Skip to
+            # avoid relaunching the app; all packages are already included.
+            self._log("Running as a bundled app - all packages are already included.")
+            return
         self.install_btn.config(state='disabled')
         self._log("---")
         self._log("Installing required packages...")

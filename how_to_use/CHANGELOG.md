@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.2.7
+- Added: Linux/Ubuntu build script (`build_linux.py`) producing a standalone binary
+- Added: bundle optional TTS/video packages (edge-tts, pyttsx3, moviepy, Pillow) into all builds so every feature works out of the box
+- Fixed: "Install Packages" button relaunched the app in a new window when run as a bundled binary; it is now hidden in the standalone app (still available when running from source)
+
 ## v2.2.6
 - Fixed: Cache folder path not displaying in GUI Entry after browsing (Windows)
 - Fixed: Output folder path display refresh on Windows
