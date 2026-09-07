@@ -28,7 +28,7 @@ CSV format (5 columns, first row is header):
     xin chào,,,,
 """
 
-__version__ = '2.2.7'
+__version__ = '2.2.8'
 
 import argparse
 import csv

@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.2.8
+- Improved: video subtitles are now much larger (font size 48 -> 80) for readability
+- Improved: cross-platform subtitle font loading (DejaVuSans/NotoSans) so Vietnamese
+  diacritics render correctly on Windows, macOS, and Linux
+
 ## v2.2.7
 - Added: Linux/Ubuntu build script (`build_linux.py`) producing a standalone binary
 - Added: bundle optional TTS/video packages (edge-tts, pyttsx3, moviepy, Pillow) into all builds so every feature works out of the box

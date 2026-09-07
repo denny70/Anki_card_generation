@@ -7,7 +7,7 @@ Two main components: `gen_anki.py` (engine) and `gen_anki_gui.py` (GUI with 2 ta
 
 ## Version
 
-Current: v2.2.7
+Current: v2.2.8
 
 ## Excel Input Format
 

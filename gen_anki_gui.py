@@ -582,16 +582,32 @@ class AnkiGeneratorGUI:
             bg_color = (30, 30, 30)  # Dark background
             text_color = (255, 255, 255)  # White text
             highlight_color = (255, 200, 0)  # Yellow highlight
-            font_size = 48
+            font_size = 80  # Larger subtitles for readability
+            margin_x = 80   # Left/right margin, scaled with font
 
-            # Try to load a font that supports CJK/Vietnamese
-            try:
-                font = ImageFont.truetype("arial.ttf", font_size)
-            except Exception:
+            # Try to load a font that supports CJK/Vietnamese. Check common
+            # locations across Windows, macOS, and Linux so subtitles render
+            # correctly on any platform (and inside the bundled app).
+            font_candidates = [
+                "arial.ttf",
+                "C:/Windows/Fonts/arial.ttf",
+                "C:/Windows/Fonts/msgothic.ttc",
+                "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
+                "/Library/Fonts/Arial Unicode.ttf",
+                "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+                "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf",
+                "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+                "/usr/share/fonts/truetype/freefont/FreeSans.ttf",
+            ]
+            font = None
+            for font_path in font_candidates:
                 try:
-                    font = ImageFont.truetype("C:/Windows/Fonts/msgothic.ttc", font_size)
+                    font = ImageFont.truetype(font_path, font_size)
+                    break
                 except Exception:
-                    font = ImageFont.load_default()
+                    continue
+            if font is None:
+                font = ImageFont.load_default()
 
             # Get audio duration
             audio_clip = AudioFileClip(audio_path)
@@ -615,7 +631,7 @@ class AnkiGeneratorGUI:
 
                 # Build layout: calculate positions for all words first
                 lines = text.split('\n')
-                line_height = font_size + 24
+                line_height = font_size + 36
                 layout = []  # [(x, y, word_text, word_idx)]
                 y = 0
                 word_idx = 0
@@ -625,15 +641,15 @@ class AnkiGeneratorGUI:
                         y += line_height // 2
                         continue
 
-                    x = 60
+                    x = margin_x
                     line_words = line.split()
 
                     for lw in line_words:
                         bbox = draw.textbbox((0, 0), lw + ' ', font=font)
                         word_width = bbox[2] - bbox[0]
 
-                        if x + word_width > width - 60:
-                            x = 60
+                        if x + word_width > width - margin_x:
+                            x = margin_x
                             y += line_height
 
                         layout.append((x, y, lw, word_idx))

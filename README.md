@@ -3,7 +3,7 @@
 Generate Anki flashcard packages (`.apkg`) with embedded TTS audio from a simple Excel file.  
 Just put your words in — the tool auto-fills meanings, example sentences, and opposites from the internet, then bakes audio directly into the package so no internet is needed when reviewing.
 
-**Current version: v2.2.7**
+**Current version: v2.2.8**
 Hope someone can help to make Anki card better for language learning
 
 ---
@@ -75,7 +75,7 @@ Hope someone can help to make Anki card better for language learning
 
 ### Option 1: Standalone App (Windows, no Python needed)
 
-1. Download `AnkiCardGenerator_v2.2.7_win.exe` from the [Releases](../../releases) page
+1. Download `AnkiCardGenerator_v2.2.8_win.exe` from the [Releases](../../releases) page
 2. Double-click to launch
 3. Drag your Excel file onto the window (or click Browse)
 4. Set deck name and language
@@ -230,7 +230,7 @@ pip install pykakasi
 python build_exe.py
 ```
 
-Output: `dist/AnkiCardGenerator_v2.2.7_win.exe`  
+Output: `dist/AnkiCardGenerator_v2.2.8_win.exe`  
 Build on each platform separately (Windows/macOS/Linux auto-detected).
 
 ---
